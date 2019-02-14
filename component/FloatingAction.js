@@ -29,8 +29,8 @@ class FloatingAction extends Component {
       keyboardHeight: 0
     };
 
-    this.mainBottomAnimation = new Animated.Value(props.distanceToEdge + props.mainVerticalDistance);
-    this.actionsBottomAnimation = new Animated.Value(ACTION_BUTTON_SIZE + props.distanceToEdge + props.actionsPaddingTopBottom + props.mainVerticalDistance);
+    this.mainBottomAnimation = new Animated.Value(props.offsetY + props.mainVerticalDistance);
+    this.actionsBottomAnimation = new Animated.Value(ACTION_BUTTON_SIZE + props.offsetY + props.actionsPaddingTopBottom + props.mainVerticalDistance);
     this.animation = new Animated.Value(0);
     this.actionsAnimation = new Animated.Value(0);
     this.visibleAnimation = new Animated.Value(props.visible ? 0 : 1);
@@ -82,7 +82,7 @@ class FloatingAction extends Component {
   }
 
   onKeyboardShow = (e) => {
-    const { distanceToEdge, actionsPaddingTopBottom } = this.props;
+    const { actionsPaddingTopBottom, offsetY } = this.props;
     const { height } = e.endCoordinates;
 
     Animated.parallel([
@@ -90,7 +90,7 @@ class FloatingAction extends Component {
         this.actionsBottomAnimation,
         {
           bounciness: 0,
-          toValue: (ACTION_BUTTON_SIZE + distanceToEdge + actionsPaddingTopBottom + height) - (isIphoneX() ? 40 : 0),
+          toValue: (ACTION_BUTTON_SIZE + offsetY + actionsPaddingTopBottom + height) - (isIphoneX() ? 40 : 0),
           duration: 250
         }
       ),
@@ -98,7 +98,7 @@ class FloatingAction extends Component {
         this.mainBottomAnimation,
         {
           bounciness: 0,
-          toValue: (distanceToEdge + height) - (isIphoneX() ? 40 : 0),
+          toValue: (offsetY + height) - (isIphoneX() ? 40 : 0),
           duration: 250
         }
       )
@@ -106,14 +106,14 @@ class FloatingAction extends Component {
   };
 
   onKeyboardHideHide = () => {
-    const { distanceToEdge, actionsPaddingTopBottom } = this.props;
+    const { offsetY, actionsPaddingTopBottom } = this.props;
 
     Animated.parallel([
       Animated.spring(
         this.actionsBottomAnimation,
         {
           bounciness: 0,
-          toValue: ACTION_BUTTON_SIZE + distanceToEdge + actionsPaddingTopBottom,
+          toValue: ACTION_BUTTON_SIZE + offsetY + actionsPaddingTopBottom,
           duration: 250
         }
       ),
@@ -121,7 +121,7 @@ class FloatingAction extends Component {
         this.mainBottomAnimation,
         {
           bounciness: 0,
-          toValue: distanceToEdge,
+          toValue: offsetY,
           duration: 250
         }
       )
@@ -238,7 +238,7 @@ class FloatingAction extends Component {
       color,
       position,
       overrideWithAction,
-      distanceToEdge
+      offsetX
     } = this.props;
 
     if (buttonColor) {
@@ -282,7 +282,7 @@ class FloatingAction extends Component {
     };
 
     if (['left', 'right'].indexOf(position) > -1) {
-      propStyles[position] = distanceToEdge;
+      propStyles[position] = offsetX;
     }
 
     return (
@@ -315,7 +315,8 @@ class FloatingAction extends Component {
       actions,
       position,
       overrideWithAction,
-      distanceToEdge,
+      offsetX,
+      offsetY,
       actionsPaddingTopBottom
     } = this.props;
     const { active, keyboardHeight } = this.state;
@@ -360,7 +361,8 @@ class FloatingAction extends Component {
             return (
               <FloatingActionItem
                 paddingTopBottom={actionsPaddingTopBottom}
-                distanceToEdge={distanceToEdge}
+                offsetX={offsetX}
+                offsetY={offsetY}
                 key={action.name}
                 textColor={textColor}
                 textBackground={textBackground}
@@ -446,7 +448,8 @@ FloatingAction.propTypes = {
     component: PropTypes.func
   })),
   color: PropTypes.string,
-  distanceToEdge: PropTypes.number,
+  offsetX: PropTypes.number,
+  offsetY: PropTypes.number,
   mainVerticalDistance: PropTypes.number,
   visible: PropTypes.bool,
   overlayColor: PropTypes.string,
@@ -477,7 +480,8 @@ FloatingAction.defaultProps = {
   color: '#1253bc',
   overlayColor: 'rgba(68, 68, 68, 0.6)',
   position: 'right',
-  distanceToEdge: 30,
+  offsetX: 30,
+  offsetY: 30,
   openOnMount: false,
   showBackground: true,
   iconHeight: 15,

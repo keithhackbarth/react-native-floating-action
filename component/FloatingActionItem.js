@@ -106,7 +106,7 @@ class FloatingActionItem extends Component {
   render() {
     const {
       position,
-      distanceToEdge,
+      offsetX,
       paddingTopBottom,
       render,
       margin,
@@ -131,7 +131,7 @@ class FloatingActionItem extends Component {
         components.push(this.renderButton());
         components.push(this.renderText());
       }
-      distanceToEdgeActionContainer.paddingLeft = distanceToEdge + margin;
+      distanceToEdgeActionContainer.paddingLeft = offsetX + margin;
     } else if (position === 'right') {
       if (render) {
         components.push(render({ key: name }));
@@ -139,7 +139,7 @@ class FloatingActionItem extends Component {
         components.push(this.renderText());
         components.push(this.renderButton());
       }
-      distanceToEdgeActionContainer.paddingRight = distanceToEdge + margin;
+      distanceToEdgeActionContainer.paddingRight = offsetX + margin;
     } else if (render) {
       components.push(render({ key: name }));
     } else {
@@ -182,7 +182,8 @@ FloatingActionItem.propTypes = {
   // not modified by user
   position: PropTypes.oneOf(['left', 'right', 'center']),
   active: PropTypes.bool,
-  distanceToEdge: PropTypes.number,
+  offsetX: PropTypes.number,
+  offsetY: PropTypes.number,
   paddingTopBottom: PropTypes.number, // modified by parent property "actionsPaddingTopBottom"
   onPress: PropTypes.func,
   render: PropTypes.func,
@@ -191,7 +192,8 @@ FloatingActionItem.propTypes = {
 
 FloatingActionItem.defaultProps = {
   color: '#1253bc',
-  distanceToEdge: 30,
+  offsetX: 30,
+  offsetY: 30,
   textElevation: 5,
   textColor: '#444444',
   textBackground: '#ffffff',
